@@ -1,0 +1,5 @@
+*sqlite*
+secrets.yml
+wish.yml
+*.yml.*
+*log*
