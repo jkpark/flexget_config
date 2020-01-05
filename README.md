@@ -1,11 +1,9 @@
-# Flexget config
-
 # Installaion
 
 clone this repository into `~/.config/flexget`
 
 ```
-git clone https://github.com/Jonybat/flexget_config.git ~/.config/flexget
+git clone https://github.com/jkpark/flexget_config.git ~/.config/flexget
 ```
 
 ### config.yml
