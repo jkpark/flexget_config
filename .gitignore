@@ -1,5 +1,5 @@
 *sqlite*
 secrets.yml
 wish.yml
-*.yml.*
+*.yml.bak
 *log*

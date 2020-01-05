@@ -1,0 +1,84 @@
+# refer : https://github.com/Jonybat/flexget_config/blob/master/config.yml
+variables: secrets.yml
+
+templates:
+  anchors:
+    _transmission-settings: &transmission-settings
+      host: "{? transmission.host ?}"
+      port: 9091
+      username: "{? transmission.user ?}"
+      password: "{? transmission.pass ?}"
+
+  torrents:
+    torrent_alive:
+      min_seeds: 3
+      reject_for: 15 minutes
+    verify_ssl_certificates: no
+    magnets: no
+
+# Global Settings 
+  global:
+    pathscrub: windows
+    free_space:
+      path: "{? folder.root ?}"
+      space: 50000 # 50GB 이상일 경우 다운로드
+
+    regexp:
+      reject:
+        - (s|d)ub(s|bed)?\b: {from: title} # subbed, dubbed, etc
+        - \b3-?D\b: {from: title} # 3D
+        - \btrailer\b: {from: title} # trailer
+        - \bWEBSCR\b: {from: title} # WEBSCR
+        - \bTS\b: {from: title} # TS
+        - \bCam\b: {from: title} # CAM
+
+    content_filter:
+      require:
+        - '*.mp4'
+        - '*.mkv'
+      require_mainfile: yes # 파일이 여러개 있는 경우, mainfile 체크
+
+  template_series_korea:
+    include:
+      - wish.yml
+    transmission:
+      <<: *transmission-settings
+      ratio: 0
+      main_file_only: yes
+      rename_like_files: no
+      path: "{? folder.root ?}{? folder.down_path ?}{? folder.series_korea ?}{{ series_name }}"
+    series:
+      settings:
+        K_SERIES:
+          identified_by: ep
+          ep_regexp: e(\d+)
+          quality: 720p !1080p !360p
+
+# Disable builtins for some tasks
+  disable-seen-retry:
+    disable:
+      - seen
+      - seen_info_hash
+      - retry_failed
+
+# Series metainfo mainly for move and update tasks
+  series-metainfo:
+    metainfo_series: yes
+    thetvdb_lookup: yes
+    tmdb_lookup: yes
+
+# Guessit parsing for some series tasks and anime, not applied to all tasks because it used to cause issues with some series
+  series-guessit:
+    parsing:
+      series: guessit
+
+tasks:
+  download_series_korea:
+    inputs:
+        - rss: { url: 'https://localhost/bbs/rss.php?b=torrent_tv', silent: yes }
+        - rss: { url: 'https://localhost/bbs/rss.php?b=torrent_variety', silent: yes }
+        - rss: { url: 'https://localhost/bbs/rss.php?b=torrent_docu', silent: yes }
+    template:
+      - template_series_korea
+      - anchors
+
