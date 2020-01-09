@@ -54,24 +54,6 @@ templates:
           ep_regexp: e(\d+)
           quality: 720p !1080p !360p
 
-# Disable builtins for some tasks
-  disable-seen-retry:
-    disable:
-      - seen
-      - seen_info_hash
-      - retry_failed
-
-# Series metainfo mainly for move and update tasks
-  series-metainfo:
-    metainfo_series: yes
-    thetvdb_lookup: yes
-    tmdb_lookup: yes
-
-# Guessit parsing for some series tasks and anime, not applied to all tasks because it used to cause issues with some series
-  series-guessit:
-    parsing:
-      series: guessit
-
 tasks:
   download_series_korea:
     inputs:
